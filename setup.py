@@ -13,7 +13,7 @@ setup(
     name=__package__,
     version=__version__,
     url='https://github.com/hybam-dev/get-pak',
-    packages=find_packages(include=["getpak.*"]),
+    packages=find_packages(include=["getpak","getpak.*"]),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
