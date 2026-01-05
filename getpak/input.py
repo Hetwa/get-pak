@@ -203,7 +203,7 @@ class GRS:
             ds = xr.open_dataset(grs_nc_file, chunks={'y': -1, 'x': -1}, engine="h5netcdf")
             trans = ds.rio.transform()
             proj = rasterio.crs.CRS.from_wkt(ds['spatial_ref'].attrs.get('crs_wkt'))
-            subset_dict = {band: ds['Rrs'].sel(wl=wave).drop_vars(['wl', 'time', 'band', 'central_wavelength']) for
+            subset_dict = {band: ds['Rrs'].sel(wl=wave).drop_vars(['wl', 'time', 'central_wavelength']) for
                            band, wave in bands.items()}
             grs = xr.Dataset(subset_dict)
             grs.attrs["proj"] = proj
