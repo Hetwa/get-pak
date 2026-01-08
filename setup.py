@@ -39,7 +39,6 @@ setup(
         'pandas',
         'rasterstats',
         'dask',
-        'ditributed',
         'msgpack',
         'fiona',
         'geopandas',
