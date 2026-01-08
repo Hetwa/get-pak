@@ -37,6 +37,21 @@ setup(
         'matplotlib',
         'numpy',
         'pandas',
-        'rasterstats'
+        'rasterstats',
+        'dask',
+        'fiona',
+        'geopandas',
+        'h5netcdf',
+        'importlib-resources',
+        'jupyterlab',
+        'netcdf4',
+        'numpy',
+        'pandas',
+        'rasterio',
+        'rasterstats==0.19.0',
+        'rioxarray',
+        'scikit-image',
+        'scikit-learn',
+        'xarray==2023.12.0'
         ]
     )
