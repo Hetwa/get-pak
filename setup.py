@@ -38,7 +38,7 @@ setup(
         'numpy',
         'pandas',
         'rasterstats',
-        'dask',
+        # 'dask',
         'msgpack',
         'fiona',
         'geopandas',

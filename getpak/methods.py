@@ -7,10 +7,10 @@ import xarray as xr
 
 from rasterstats import zonal_stats
 
-from getpak.input import GRS
-from getpak.commons import DefaultDicts as dd
-from dask import compute
-from dask import delayed
+# from getpak.input import GRS
+# from getpak.commons import DefaultDicts as dd
+# from dask import compute
+# from dask import delayed
 from getpak import owts_spy_S2_B1_7
 from getpak import owts_spy_S2_B2_7
 from getpak import owts_spm_S2_B1_8A
@@ -111,64 +111,64 @@ class Methods:
 
         return values, slices, mask_image
     
-    @staticmethod
-    def sample_grs_with_shp(grs_nc, vector_shp, grs_version='v20', unique_shp_key='id'):
-        '''
-        Given a GRS.nc file and a multi-feature vector.shp, extract the Rrs values for all GRS bands that
-        fall inside the vector.shp features.
+    # @staticmethod
+    # def sample_grs_with_shp(grs_nc, vector_shp, grs_version='v20', unique_shp_key='id'):
+    #     '''
+    #     Given a GRS.nc file and a multi-feature vector.shp, extract the Rrs values for all GRS bands that
+    #     fall inside the vector.shp features.
 
-        Parameters
-        ----------
-        @grs_nc: the path to the GRS file
-        @vector_shp: the path to the shapefile
-        @grs_version: a string with GRS version ('v15' or 'v20' for version 2.0.5+)
-        @unique_shp_key: A unique key/column to identify each feature in the shapefile
+    #     Parameters
+    #     ----------
+    #     @grs_nc: the path to the GRS file
+    #     @vector_shp: the path to the shapefile
+    #     @grs_version: a string with GRS version ('v15' or 'v20' for version 2.0.5+)
+    #     @unique_shp_key: A unique key/column to identify each feature in the shapefile
 
-        Returns
-        -------
-        @return result: bla bla bla
-        '''
-        try:
-            # No need to print or log, the functions should handle it internally.
-            GRS.grs_dict = GRS.get_grs_dict(grs_nc, grs_version)
-            GRS.gpd_feature_dict = GRS._get_shp_features(vector_shp, unique_key=unique_shp_key)
+    #     Returns
+    #     -------
+    #     @return result: bla bla bla
+    #     '''
+    #     try:
+    #         # No need to print or log, the functions should handle it internally.
+    #         GRS.grs_dict = GRS.get_grs_dict(grs_nc, grs_version)
+    #         GRS.gpd_feature_dict = GRS._get_shp_features(vector_shp, unique_key=unique_shp_key)
 
-        except Exception as e:
-            # self.log.error(f'Error: {e}')
-            sys.exit(1)  # Exit program: 0 is success, 1 is failure
+    #     except Exception as e:
+    #         # self.log.error(f'Error: {e}')
+    #         sys.exit(1)  # Exit program: 0 is success, 1 is failure
 
-        # Initialize the dict and fill it with zeros
-        # This will be converted to a pd.DataFrame later
-        pt_stats = {}
-        for band in GRS.grs_v20nc_s2bands.keys():
-            pt_stats[GRS.grs_v20nc_s2bands[band]] = {id: 0.0 for id in GRS.gpd_feature_dict.keys()}
+    #     # Initialize the dict and fill it with zeros
+    #     # This will be converted to a pd.DataFrame later
+    #     pt_stats = {}
+    #     for band in GRS.grs_v20nc_s2bands.keys():
+    #         pt_stats[GRS.grs_v20nc_s2bands[band]] = {id: 0.0 for id in GRS.gpd_feature_dict.keys()}
 
-        # Declare a list to hold delayed tasks
-        tasks = []
+    #     # Declare a list to hold delayed tasks
+    #     tasks = []
 
-        # Create delayed tasks for each combination of band and shapefile point
-        for band in dd.grs_v20nc_s2bands.keys():
-            for id in dd.gpd_feature_dict.keys():
-                # Get the shape feature
-                shp_feature = dd.gpd_feature_dict[id]
-                # Create a delayed task
-                task = delayed(GRS._process_band_point)(band, shp_feature, shp_feature.crs, id)
-                tasks.append(task)
+    #     # Create delayed tasks for each combination of band and shapefile point
+    #     for band in dd.grs_v20nc_s2bands.keys():
+    #         for id in dd.gpd_feature_dict.keys():
+    #             # Get the shape feature
+    #             shp_feature = dd.gpd_feature_dict[id]
+    #             # Create a delayed task
+    #             task = delayed(GRS._process_band_point)(band, shp_feature, shp_feature.crs, id)
+    #             tasks.append(task)
 
-        global counter
-        counter = 0
-        print(f'Processing {len(tasks)} tasks...')
-        # Compute all delayed dask-tasks
-        results = compute(*tasks)
-        print(f' {counter}')
-        print('Done.')
+    #     global counter
+    #     counter = 0
+    #     print(f'Processing {len(tasks)} tasks...')
+    #     # Compute all delayed dask-tasks
+    #     results = compute(*tasks)
+    #     print(f' {counter}')
+    #     print('Done.')
 
-        # Aggregate results into pt_stats
-        for band, pt_id, mean_rrs in results:
-            pt_stats[dd.grs_v20nc_s2bands[band]][pt_id] = mean_rrs
+    #     # Aggregate results into pt_stats
+    #     for band, pt_id, mean_rrs in results:
+    #         pt_stats[dd.grs_v20nc_s2bands[band]][pt_id] = mean_rrs
 
-        df = pd.DataFrame(pt_stats)
-        return df
+    #     df = pd.DataFrame(pt_stats)
+    #     return df
 
     def _sam(self, rrs, single=False, sensor='S2MSI', mode='B1'):
         """
